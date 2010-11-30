@@ -37,6 +37,13 @@ MaiaXmlRpcClient::MaiaXmlRpcClient(QObject* parent) : QObject(parent),
 MaiaXmlRpcClient::MaiaXmlRpcClient(QUrl url, QObject* parent) : QObject(parent),
 	manager(this), request(url)
 {
+        if( url.userName().length() > 0 ) {
+            //create authorization
+            QString     s = url.userName() + QString(":") + url.password();
+            QByteArray cs = "Basic " + s.toAscii().toBase64();
+            request.setRawHeader("Authorization", cs);
+            //qDebug() << QString("[LibMaia] Authorization with [ %1 ]").arg( QString(cs));
+        }
 	init();
 	setUrl(url);
 }
